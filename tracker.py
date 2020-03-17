@@ -6,7 +6,7 @@ import numpy as np
 import os
 import streamlit as st
 from utilities import list_all_tags, is_tag, find_tag
-from preprocesser import load_data
+from preprocessor import load_data
 
 pd.set_option('display.max_colwidth', -1)
 
