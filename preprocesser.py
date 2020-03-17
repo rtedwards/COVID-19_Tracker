@@ -6,7 +6,7 @@ import folium
 import urllib
 import os
 
-def get_data(type=time_series): 
+def load_data(type=time_series): 
 
     if type == time_series:
         TIME_DATA_DIR = '/Users/Berto/Projects/COVID-19_Tracker/COVID-19/csse_covid_19_data/csse_covid_19_time_series'
@@ -19,6 +19,7 @@ def get_data(type=time_series):
         deaths_df = pd.read_csv(DEATHS)
         recovered_df = pd.read_csv(RECOVERED)
 
+        # Convert from Wide to Long format
         confirmed_df = confirmed_df.melt(id_vars=['Province/State', 'Country/Region', 'Lat', 'Long'],
                                          var_name='date', 
                                          value_name='confirmed')
@@ -28,13 +29,16 @@ def get_data(type=time_series):
         recovered_df = recovered_df.melt(id_vars=['Province/State', 'Country/Region', 'Lat', 'Long'],
                                          var_name='date', 
                                          value_name='recovered')
-
+        # Merge data frames
         df = pd.merge(confirmed_df, deaths_df, 
                       on=['Province/State', 'Country/Region', 'Lat', 'Long', 'date'],
                       how='inner')
         df = pd.merge(df, recovered_df, 
                       on=['Province/State', 'Country/Region', 'Lat', 'Long', 'date'],
                       how='inner')
+
+        # Convert to datetime
+        df['date'] = pd.to_datetime(df['date'], format="%m/%d/%y")
 
         return df
 
@@ -48,4 +52,6 @@ def get_data(type=time_series):
 
     else:
         print("TypeError")
+
+
 
