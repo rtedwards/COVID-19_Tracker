@@ -23,3 +23,13 @@ else:
 # Select Date
 current_date = df['date'].max()
 date = st.date_input("Select Date:", value=current_date)
+
+df = df.loc[df['date'] == date]
+
+# Create map
+active_map = choropleth_map(df,
+                            columns=['ISO3 Code', response],
+                            geo_data,
+                            color,
+                            legend)
+st.write(active_map._repr_html_(), unsafe_allow_html=True)
