@@ -1,0 +1,22 @@
+name: virus
+channels: 
+  - defaults
+  - conda-forge
+  - anaconda
+  - pypi
+dependencies:
+  - folium=0.10.1
+  - geopandas=0.6.2
+  - joblib=0.14.1
+  - pandas=0.25.3
+  - pip=19.3.1
+  - python=3.8.1
+  - pip:
+    - Flask==1.1.1 
+    - ipywidgets==7.5.1
+    - matplotlib==3.2.0
+    - numpy==1.18.1
+    - seaborn==0.10.0
+    - streamlit==0.56.0
+
+  
