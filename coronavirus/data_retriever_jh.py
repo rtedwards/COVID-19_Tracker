@@ -16,10 +16,22 @@ def pull_data():
     deaths_df = pd.read_csv(DEATHS)
     recovered_df = pd.read_csv(RECOVERED)
 
-    # Need to change to actual DB
-    confirmed_df.to_csv(DATA_DIR / "confirmed_jh.csv")
-    deaths_df.to_csv(DATA_DIR / "deaths_jh.csv")
-    recovered_df.to_csv(DATA_DIR / "recovered_jh.csv")
+    save_data(confirmed_df, DATA_DIR, "confirmed_jh.csv")
+    save_data(deaths_df, DATA_DIR, "deaths_jh.csv")
+    save_data(recovered_df, DATA_DIR, "recovered_jh.csv")
+
+
+def save_data(df, data_dir, filename):
+    """
+    Saves the data (to csv) in the data directory (creates directory if doesn't exit)
+        - Need to change to actual DB
+    :param data_dir: data directory
+    :param filename: name of saved file
+    """
+    if not Path(data_dir).is_dir():
+        data_dir.mkdir(parents=True, exist_ok=True)
+    df.to_csv(data_dir / filename)
+
 
 def main():
     pull_data()
