@@ -7,14 +7,17 @@ class TestDBUtils(unittest.TestCase):
         """
         Creates paths and stores them in the test case as self objects.
         """
-        self.data_dir = Path.cwd() / 'tests/db_tests'
+        self.data_dir = Path.cwd() / 'tests/db_tests/data'
         self.db_path = self.data_dir / 'database.sqlite3'
+        self.connection = dbu.db_connect(db_path=self.db_path)
         
         # self.pol_df = tu.build_test_pol_dataframe()
         # self.observation_df = tu.build_test_observation_dataframe()
 
     def tearDown(self):
-        pass
+        """Removes database file and data directory"""
+        self.db_path.unlink()
+        self.data_dir.rmdir()
 
     def test_db_connect(self): 
         """
@@ -23,11 +26,9 @@ class TestDBUtils(unittest.TestCase):
             - the sqlite db file is created
             - the sqlite.Connection is returned
         """
-        connection = dbu.db_connect(db_path=self.db_path)
-
         self.assertTrue(self.data_dir.is_dir())
         self.assertTrue(self.db_path.is_file())
-        self.assertTrue(type(connection == 'sqlite3.Connection'))
+        self.assertTrue(type(self.connection == 'sqlite3.Connection'))
         
 
 if __name__ == '__main__':
