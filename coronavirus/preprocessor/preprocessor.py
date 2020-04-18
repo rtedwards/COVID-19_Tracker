@@ -5,15 +5,13 @@ import json
 import folium
 import urllib
 import os
+import coronavirus.db_utils.db_utils as dbu
+import coronavirus.preprocessor.preprocessor
 
 def load_data(type=time_series): 
 
     if type == time_series:
-        TIME_DATA_DIR = '/Users/Berto/Projects/COVID-19_Tracker/COVID-19/csse_covid_19_data/csse_covid_19_time_series'
-        
-        CONFIRMED = os.path.join(TIME_DATA_DIR, "time_series_19-covid-Confirmed.csv")
-        DEATHS = os.path.join(TIME_DATA_DIR, "time_series_19-covid-Deaths.csv")
-        RECOVERED = os.path.join(TIME_DATA_DIR, "time_series_19-covid-Recovered.csv")
+        DATA_DIR = Path.cwd() / 'data'
 
         confirmed_df = pd.read_csv(CONFIRMED)
         deaths_df = pd.read_csv(DEATHS)
@@ -52,6 +50,3 @@ def load_data(type=time_series):
 
     else:
         print("TypeError")
-
-
-
