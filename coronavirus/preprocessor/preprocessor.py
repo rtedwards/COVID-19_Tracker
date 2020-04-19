@@ -13,7 +13,7 @@ def convert_jh_global_time_series_to_long(df, name):
                  value_name=name)
 
     # Convert to datetime
-    df['date'] = pd.to_datetime(df['date'], format="%m/%d/%y")
+    df['date'] = pd.to_datetime(df['date'], format="%m/%d/%y").dt.normalize()
 
     # Rename columns
     df.columns = ['province/state', 'country/region', 'latitude', 'longitude', 'date', name]
