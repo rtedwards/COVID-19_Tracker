@@ -2,6 +2,7 @@ import sqlite3
 import pandas as pd
 from sqlite3 import Error
 from pathlib import Path
+from coronavirus.preprocessor.preprocessor import convert_jh_global_time_series_to_long
 
 # create a default path to connect to and create (if necessary) a database
 # called 'database.sqlite3' in the same directory as this script
@@ -11,6 +12,7 @@ class DataBase():
         self.data_dir = Path.cwd() / 'data'
         self.db_path = self.data_dir / self.db_name
         self.connection = self.connect()
+        self.cursor = self.connection.cursor()
 
 
     def connect(self):
@@ -20,6 +22,7 @@ class DataBase():
             if not Path(self.data_dir).is_dir():
                 self.data_dir.mkdir(parents=True, exist_ok=True)
 
+            print(f"Connecting to {self.db_path}")
             connection = sqlite3.connect(self.db_path)
             print("Connection to SQLite DB successful")
         except Error as e:
@@ -30,8 +33,12 @@ class DataBase():
     def pull_data(self, url, name, csv=False):
         """
         Pull data from John Hopkins github and store in DB (currently a csv)
+            - Converts time series to long format before saving
         """
         df = pd.read_csv(url)
+        df = convert_jh_global_time_series_to_long(df, name.split('_')[2])
+        print(list(df.columns))
+
         self.save_to_db(df, name)
         
         if csv:
@@ -84,16 +91,18 @@ class DataBase():
 
 
     def read_table_to_dataframe(self, table_name):
-        return pd.read_sql_query("SELECT * FROM " + table_name, self.connection)
-
+        df = pd.read_sql_query("SELECT * FROM " + table_name, self.connection)
+        return df.drop_duplicates()
 
     def list_tables(self):
-        cursor = self.connection.cursor()
+        
         # cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
-        cursor.execute("SELECT * FROM sqlite_master")
-        tables = cursor.fetchall()
+        self.cursor.execute("SELECT * FROM sqlite_master")
+        tables = self.cursor.fetchall()
         tables = [x[2] for x in tables]
         print(f"> Tables in {self.db_name}: {tables}")
+
+        return tables
 
 
 def main():
@@ -104,13 +113,21 @@ def main():
 
     # db = DataBase('database.sqlite3')
     db = DataBase('COVID-19.db')
-    db.pull_data(url=CONFIRMED, name='jh_confirmed', csv=True)
-    db.pull_data(url=DEATHS, name='jh_deaths', csv=True)
-    db.pull_data(url=RECOVERED, name='jh_recovered', csv=True)
+    db.pull_data(url=CONFIRMED, name='jh_global_confirmed', csv=True)
+    db.pull_data(url=DEATHS, name='jh_global_deaths', csv=True)
+    db.pull_data(url=RECOVERED, name='jh_global_recovered', csv=True)
 
-    db.list_tables()
-    df = db.read_table_to_dataframe('jh_deaths')
-    print(df.head())
+    # Summary Statistics
+    tables = db.list_tables()
+    for table in tables:
+        db.cursor.execute("SELECT count(*) FROM " + table)
+        length = db.cursor.fetchall()
+
+        print(f"{table}.length(): {length[0][0]}")
+
+
+    df = db.read_table_to_dataframe('jh_global_deaths')
+    # print(df.tail(20))
 
 
 if __name__ == '__main__':
