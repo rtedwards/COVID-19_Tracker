@@ -4,6 +4,7 @@ import joblib
 import folium
 import numpy as np
 import os
+import altair as alt
 import streamlit as st
 # from coronavirus.preprocessor.preprocessor import load_data
 from coronavirus.mapper.mapper import choropleth_map
@@ -29,7 +30,7 @@ pd.set_option('display.max_colwidth', -1)
 
 db = DataBase('COVID-19.db')
 
-data_type = st.selectbox(label='Select data', options=['CONFIRMED', 'DEATHS', 'RECOVERED'], index=0)
+data_type = st.sidebar.selectbox(label='Select data', options=['DEATHS', 'CONFIRMED', 'RECOVERED'], index=0)
 if data_type == 'CONFIRMED': 
     df = db.read_table_to_dataframe('jh_global_confirmed')
     response = 'confirmed'
@@ -37,25 +38,49 @@ if data_type == 'CONFIRMED':
 elif data_type == 'DEATHS': 
     df = db.read_table_to_dataframe('jh_global_deaths')
     response = 'deaths'
-
 else: 
     df = db.read_table_to_dataframe('jh_global_recovered')
     response = 'recovered'
 
-st.write(df)
+selected_countries = st.sidebar.multiselect(
+    'Select countries',
+    list(df['country/region'].sort_values().unique()) )
+st.write('Plotting the following countries:', selected_countries)
+# st.write
 
-# Select Date
-current_date = df['date'].max()
-st.write(current_date)
+countries_df = df[df['country/region'].isin(selected_countries)]
+chart_type = st.sidebar.selectbox(label='Plot type', options=["Lineplot","Map"])
 
-date = st.sidebar.date_input("Select Date:", value=current_date)
+if chart_type == "Lineplot":
+    month_ticks = np.unique(countries_df['date'].values.astype('datetime64[M]')).astype('datetime64',copy=False)
+    print(month_ticks)
+    line_plot = alt.Chart(countries_df).mark_line().encode(
+                    # x='date',
+                    # x=alt.X('date', axis=alt.Axis(labels=False),
+                    x=alt.X('date', axis=alt.Axis(values=month_ticks)),
+                    y=alt.Y(response),
+                    # y=response,
+                    color='country/region'
+                )#.configure_axisX()
+    st.altair_chart(line_plot, use_container_width=True)
+    # st.line_chart(countries_df[['confirmed', 'date', 'country/region']])
+    st.write(countries_df)
 
-df = df.loc[df['date'] == date]
 
-# Create map
-active_map = choropleth_map(df,
-                            columns=['ISO3 Code', response],
-                            geo_data=COUNTRY_GEO,
-                            color='YlGn',
-                            legend='Cases')
-st.write(active_map._repr_html_(), unsafe_allow_html=True)
+## Choropleth Maps
+if chart_type == "Map": 
+    # Select Date
+    current_date = df['date'].max()
+    st.write(current_date)
+
+    date = st.sidebar.date_input("Select Date:", value=current_date)
+
+    df = df.loc[df['date'] == date]
+
+    # Create map
+    active_map = choropleth_map(df,
+                                columns=['ISO3 Code', response],
+                                geo_data=COUNTRY_GEO,
+                                color='YlGn',
+                                legend='Cases')
+    st.write(active_map._repr_html_(), unsafe_allow_html=True)
