@@ -29,6 +29,18 @@ class DataBase():
             print(f"The error '{e}' occurred")
         return connection
 
+    def pull_mobility_data(self):
+        """
+        Pulls mobility data from Google and Apple.  Needs to be updated daily
+        Google: 
+            - CSV: https://www.gstatic.com/covid19/mobility/Global_Mobility_Report.csv
+        Apple: https://www.apple.com/covid19/mobility
+            - CSV: 
+        """
+        # pull_google_mobility_data()
+        # pull_apple_mobility_data()
+        pass
+
 
     def pull_data(self, url, name, csv=False):
         """
