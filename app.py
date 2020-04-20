@@ -54,7 +54,7 @@ if chart_type == "Lineplot":
     selected_countries = st.sidebar.multiselect(
         'Select countries',
         list(df['country/region'].sort_values().unique()),
-        default = ['US','China', 'Italy', 'Spain', 'Germany'] )
+        default = ['US', 'United Kingdom', 'Italy', 'Spain', 'France', 'Germany'] )
     
     # st.write('Plotting the following countries:', selected_countries)
 
@@ -63,15 +63,11 @@ if chart_type == "Lineplot":
     month_ticks = np.unique(countries_df['date'].values.astype('datetime64[M]')).astype('datetime64',copy=False)
     print(month_ticks)
     line_plot = alt.Chart(countries_df).mark_line().encode(
-                    # x='date',
-                    # x=alt.X('date', axis=alt.Axis(labels=False),
-                    x=alt.X('date', axis=alt.Axis(values=month_ticks)),
-                    y=alt.Y(response),
-                    # y=response,
-                    color='country/region'
-                )#.configure_axisX()
+                    x='date:T',
+                    y=response + ':Q',
+                    color='country/region' + ':N'
+                )
     st.altair_chart(line_plot, use_container_width=True)
-    # st.line_chart(countries_df[['confirmed', 'date', 'country/region']])
     st.write(countries_df)
 
 
