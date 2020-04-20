@@ -6,6 +6,14 @@ import os
 import pandas as pd
 import urllib
 
+URL = 'https://raw.githubusercontent.com/python-visualization/folium/master/examples/data'
+
+COUNTRY_GEO = f'https://github.com/datasets/geo-countries/tree/master/data/countries.geojson'
+COUNTRY_GEO = f'{URL}/world-countries.json'
+STATE_GEO = f'{URL}/us-states.json'
+
+# Alternate geojson
+# https://geojson-maps.ash.ms/
 
 def choropleth_map(df,columns,geo_data,color,legend):
     cmap = folium.Map(location=[48, -102], 
