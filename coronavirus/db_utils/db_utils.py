@@ -35,12 +35,17 @@ class DataBase():
         Google: 
             - CSV: https://www.gstatic.com/covid19/mobility/Global_Mobility_Report.csv
         Apple: https://www.apple.com/covid19/mobility
-            - CSV: 
+            - CSV: https://covid19-static.cdn-apple.com/covid19-mobility-data/2006HotfixDev7/v1/en-us/applemobilitytrends-2020-04-16.csv
         """
         # pull_google_mobility_data()
         # pull_apple_mobility_data()
         pass
 
+    def pull_world_bank_data(self):
+        """Pulls population data from World Bank
+            - api.worldbank.org/v2/en/indicator/EN.POP.DNST?downloadformat=csv
+        """
+        
 
     def pull_data(self, url, name, csv=False):
         """

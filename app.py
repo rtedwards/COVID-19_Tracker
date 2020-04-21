@@ -122,3 +122,15 @@ if chart_type == "Map":
     st.write(active_map._repr_html_(), unsafe_allow_html=True)
     st.write(active_map, unsafe_allow_html=True)
     st.write(df)
+
+
+# Sources
+st.markdown(
+    "Sources  \n\
+    [Johns Hopkins](https://github.com/CSSEGISandData/COVID-19)  \n\
+    [Google](https://www.google.com/covid19/mobility/)  \n\
+    [World Bank](api.worldbank.org/v2/en/indicator/EN.POP.DNST?downloadformat=csv)  \n\
+    ")
+st.markdown(
+    "Github: [github.com/rtedwards](https://github.com/rtedwards/coronavirus-tracker)"
+)
