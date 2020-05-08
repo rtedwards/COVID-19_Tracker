@@ -19,16 +19,11 @@ from coronavirus.pages.country_line_plots import load_country_line_plots_page
 confirmed, deaths, recovered = get_totals()
 
 n_spaces = string_of_spaces(24)
-st.markdown(
-    f"\
+st.markdown(f"\
     ### 🤒 {confirmed:,} {n_spaces}\
         💀 {deaths:,} {n_spaces}\
         🤕 {recovered:,}\n\
-    "
-)
-# st.header(f"Confirmed: {confirmed}")   
-# st.header(f"Deaths: {deaths}")
-# st.header(f"Recovered: {recovered}")
+            ")
 
 chart_type = st.sidebar.selectbox(label='Plot type', options=["Line Plots","World Map"])
 

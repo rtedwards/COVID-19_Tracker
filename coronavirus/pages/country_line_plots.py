@@ -41,19 +41,32 @@ def load_country_line_plots_page():
                                 value=5)
 
     top_countries = get_top_n_countries(df, n, response)
-
     selected_countries = st.sidebar.multiselect(
         'Select countries',
         list(df['country/region'].sort_values().unique()),
         default = top_countries)
     
-    countries_df = df[df['country/region'].isin(selected_countries)]
+    log_scale = st.sidebar.checkbox("Log Scale", value=False)
+    x_num_cases = st.sidebar.checkbox("Days Since 1000 Cases")
+    # TODO: scale df to date of x number of cases
 
+    countries_df = df[df['country/region'].isin(selected_countries)]
     month_ticks = np.unique(countries_df['date'].values.astype('datetime64[M]')).astype('datetime64',copy=False)
-    line_plot = alt.Chart(countries_df).mark_line().encode(
-                    x='date:T',
-                    y=response + ':Q',
-                    color='country/region' + ':N'
-                )
+    
+    if log_scale:
+        countries_df = countries_df.loc[countries_df[response] != 0]
+        line_plot = alt.Chart(countries_df).mark_line().encode(
+                        alt.Y(response + ':Q', scale=alt.Scale(type='log')),
+                        x='date:T',
+                        # y=response + ':Q',
+                        color='country/region' + ':N'
+                    )
+    else:
+        line_plot = alt.Chart(countries_df).mark_line().encode(
+                        x='date:T',
+                        y=response + ':Q',
+                        color='country/region' + ':N'
+                    )
+
     st.altair_chart(line_plot, use_container_width=True)
     st.write(countries_df)

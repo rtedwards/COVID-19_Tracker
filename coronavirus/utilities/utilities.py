@@ -44,3 +44,21 @@ def string_of_spaces(n):
     :param n {int}: number of spaces
     """
     return "&nbsp;" * n
+
+# TODO: get date of x number of cases reached
+def get_date_of_x_cases_reached(df, x):
+    """
+    Determines the date hit n number of cases were reached
+
+    :param df: pandas df
+    :param x {int}: number of cases
+    """
+    pass
+
+# TODO: create column of days since x number of cases reached
+def get_date_of_x_cases_reached(df):
+    """
+    create column of days since x number of cases reached
+    :param df: pandas df
+    """
+    pass
