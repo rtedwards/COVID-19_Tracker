@@ -45,3 +45,10 @@ def merge_dataframes(df1, df2, df3=None):
 # https://rsf.org/en/ranking_table
 # https://www.cato.org/sites/cato.org/files/human-freedom-index-files/human-freedom-index-2019.pdf
 #   - https://www.reddit.com/r/IntellectualDarkWeb/comments/b07on4/political_compass_of_countries_data_from_the/
+
+# Air Pollutions
+# https://projects.iq.harvard.edu/files/covid-pm/files/pm_and_covid_mortality.pdf
+# https://ourworldindata.org/air-pollution
+# https://ourworldindata.org/outdoor-air-pollution
+# https://ourworldindata.org/indoor-air-pollution
+#  - https://github.com/owid/covid-19-data/tree/master/public/data

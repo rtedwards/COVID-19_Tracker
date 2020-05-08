@@ -18,8 +18,9 @@ STATE_GEO = f'{URL}/us-states.json'
 def choropleth_map(df,columns,geo_data,color,legend):
     cmap = folium.Map(location=[48, -102], 
                       tiles='OpenStreetMap',
+                      attr='www.openstreetmap.com',
                       zoom_start=4,
-                      min_zoom=4,
+                      min_zoom=2,
                       max_zoom=15)
 
     folium.Choropleth(geo_data=geo_data,
@@ -35,10 +36,10 @@ def choropleth_map(df,columns,geo_data,color,legend):
                       show=False
     ).add_to(cmap)
 
-    folium.TileLayer('Stamen Terrain').add_to(cmap)
-    folium.TileLayer('MapQuest Open Aerial', attr="MapQuest Open Aerial").add_to(cmap)
-    folium.TileLayer('cartodbdark_matter').add_to(cmap)
-    folium.TileLayer('stamentoner').add_to(cmap)
-    folium.LayerControl().add_to(cmap)
+    # folium.TileLayer('Stamen Terrain').add_to(cmap)
+    # folium.TileLayer('MapQuest Open Aerial', attr="MapQuest Open Aerial").add_to(cmap)
+    # folium.TileLayer('cartodbdark_matter').add_to(cmap)
+    # folium.TileLayer('stamentoner').add_to(cmap)
+    # folium.LayerControl().add_to(cmap)
 
     return cmap

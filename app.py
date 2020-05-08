@@ -113,15 +113,19 @@ if chart_type == "Map":
     st.write(df)
 
     # Create map
-    active_map = choropleth_map(df,
-                                columns=['ISO3 Code', response],
-                                geo_data=COUNTRY_GEO,
-                                color='YlGn',
-                                legend='Cases')
-    st.write(type(active_map))
-    st.write(active_map._repr_html_(), unsafe_allow_html=True)
-    st.write(active_map, unsafe_allow_html=True)
-    st.write(df)
+    with st.spinner('Rendering map...'):
+        active_map = choropleth_map(df,
+                                    columns=['ISO3 Code', response],
+                                    geo_data=COUNTRY_GEO,
+                                    color='YlGn',
+                                    legend='Cases')
+        # st.write(type(active_map))
+        st.write(active_map._repr_html_(), unsafe_allow_html=True)
+        st.success("Map rendered.")
+        # st.write(active_map, unsafe_allow_html=True)
+        # st.write(df)
+
+    active_map.save('map.html')
 
 
 # Sources
