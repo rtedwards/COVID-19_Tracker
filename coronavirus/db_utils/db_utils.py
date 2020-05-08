@@ -113,6 +113,7 @@ class DataBase():
         df = df.reindex(columns=['province/state', 'country/region', 
                                  'confirmed', 'deaths', 'recovered', 'date'])
         df = df.sort_values(by=['date'], ascending=False)
+        df['date'] = pd.to_datetime(df['date']).dt.normalize()
         return df.drop_duplicates()
 
     def list_tables(self):

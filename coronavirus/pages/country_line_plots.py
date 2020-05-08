@@ -23,7 +23,6 @@ def load_country_line_plots_page():
     if data_type == 'CONFIRMED': 
         df = db.read_table_to_dataframe('jh_global_confirmed')
         response = 'confirmed'
-        df['date'] = pd.to_datetime(df['date']).dt.normalize()
     elif data_type == 'DEATHS': 
         df = db.read_table_to_dataframe('jh_global_deaths')
         response = 'deaths'
