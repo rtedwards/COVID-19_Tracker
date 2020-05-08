@@ -38,6 +38,20 @@ def consolidate_country_regions(df):
     """Selects the rows with overall country stats and drops region column"""
     return df.loc[df['province/state'].isnull()].drop(columns=['province/state'])
 
+
+def get_top_n_countries(df, n, response):
+    """
+    Returns a list of the top countries by response
+        :param df: pandas dataframe
+        :param n {int}: number of countries to select
+        :param response {string}: deaths, confirmed, or recovered
+    """
+    today = df.sort_values(by=['date'], ascending=False).iloc[0]
+    top_df = df.loc[df['date'] == df['date'].max()]
+    top_df = top_df.sort_values(by=[response], ascending=False)
+
+    return list(top_df['country/region'].iloc[0:n])
+
 # Calculate Incidence, Prevalence, Morbidity, Mortality
 # https://www.health.ny.gov/diseases/chronic/basicstat.htm
 

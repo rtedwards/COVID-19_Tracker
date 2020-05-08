@@ -11,7 +11,8 @@ import streamlit as st
 # from coronavirus.preprocessor.preprocessor import load_data
 from coronavirus.mapper.mapper import choropleth_map
 from coronavirus.db_utils.db_utils import DataBase
-from coronavirus.preprocessor.preprocessor import consolidate_country_regions
+from coronavirus.preprocessor.preprocessor import (consolidate_country_regions,
+                                                   get_top_n_countries)
 
 
 def load_country_line_plots_page():
@@ -31,21 +32,23 @@ def load_country_line_plots_page():
         response = 'recovered'
 
     # Select Country row by dropping all rows where province/state != None
+    st.header("Countries over Time")
     df = consolidate_country_regions(df)
 
-    st.header("Countries over Time")
-        # Choose Countries
+    n = st.sidebar.number_input(label='Top number of countries to plot',
+                                min_value=1,
+                                value=5)
+
+    top_countries = get_top_n_countries(df, n, response)
+
     selected_countries = st.sidebar.multiselect(
         'Select countries',
         list(df['country/region'].sort_values().unique()),
-        default = ['US', 'United Kingdom', 'Italy', 'Spain', 'France', 'Germany'] )
+        default = top_countries)
     
-    # st.write('Plotting the following countries:', selected_countries)
-
     countries_df = df[df['country/region'].isin(selected_countries)]
 
     month_ticks = np.unique(countries_df['date'].values.astype('datetime64[M]')).astype('datetime64',copy=False)
-    # print(month_ticks)
     line_plot = alt.Chart(countries_df).mark_line().encode(
                     x='date:T',
                     y=response + ':Q',

@@ -109,6 +109,10 @@ class DataBase():
 
     def read_table_to_dataframe(self, table_name):
         df = pd.read_sql_query("SELECT * FROM " + table_name, self.connection)
+        df = df.drop(columns=['latitude', 'longitude'])
+        df = df.reindex(columns=['province/state', 'country/region', 
+                                 'confirmed', 'deaths', 'recovered', 'date'])
+        df = df.sort_values(by=['date'], ascending=False)
         return df.drop_duplicates()
 
     def list_tables(self):
