@@ -18,17 +18,19 @@ from coronavirus.preprocessor.preprocessor import (consolidate_country_regions,
 def load_country_line_plots_page():
     # Get the data
     db = DataBase('COVID-19.db')
-
     data_type = st.sidebar.selectbox(label='Select data', options=['DEATHS', 'CONFIRMED', 'RECOVERED'], index=0)
     if data_type == 'CONFIRMED': 
-        df = db.read_table_to_dataframe('jh_global_confirmed')
         response = 'confirmed'
+        df = db.read_table_to_dataframe('jh_global_confirmed', response)
+        # df = db.load_jh_world_df()
     elif data_type == 'DEATHS': 
-        df = db.read_table_to_dataframe('jh_global_deaths')
         response = 'deaths'
+        df = db.read_table_to_dataframe('jh_global_deaths', response)
+        # df = db.load_jh_world_df()
     else: 
-        df = db.read_table_to_dataframe('jh_global_recovered')
         response = 'recovered'
+        df = db.read_table_to_dataframe('jh_global_recovered', response)
+        # df = db.load_jh_world_df()
 
     # Select Country row by dropping all rows where province/state != None
     st.header("Countries over Time")

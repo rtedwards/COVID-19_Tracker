@@ -6,6 +6,7 @@ import folium
 import urllib
 import os
 
+
 def convert_jh_global_time_series_to_long(df, name): 
     """Converts JH global time series data from wide to long format"""
     df = df.melt(id_vars=['Province/State', 'Country/Region', 'Lat', 'Long'],
@@ -51,6 +52,8 @@ def get_top_n_countries(df, n, response):
     top_df = top_df.sort_values(by=[response], ascending=False)
 
     return list(top_df['country/region'].iloc[0:n])
+
+    
 
 # Calculate Incidence, Prevalence, Morbidity, Mortality
 # https://www.health.ny.gov/diseases/chronic/basicstat.htm

@@ -54,7 +54,6 @@ class DataBase():
         """
         df = pd.read_csv(url)
         df = convert_jh_global_time_series_to_long(df, name.split('_')[2])
-        print(list(df.columns))
 
         self.save_to_db(df, name)
         
@@ -107,11 +106,11 @@ class DataBase():
             print(f"The error '{e}' occurred")
 
 
-    def read_table_to_dataframe(self, table_name):
+    def read_table_to_dataframe(self, table_name, response):
         df = pd.read_sql_query("SELECT * FROM " + table_name, self.connection)
         df = df.drop(columns=['latitude', 'longitude'])
         df = df.reindex(columns=['province/state', 'country/region', 
-                                 'confirmed', 'deaths', 'recovered', 'date'])
+                                 response, 'date'])
         df = df.sort_values(by=['date'], ascending=False)
         df['date'] = pd.to_datetime(df['date']).dt.normalize()
         return df.drop_duplicates()
@@ -125,6 +124,25 @@ class DataBase():
         print(f"> Tables in {self.db_name}: {tables}")
 
         return tables
+
+    def load_jh_world_df(self):
+        """Loads and joins confirmed, deaths, and recovered tables from DB"""
+        
+        confirmed_df = self.read_table_to_dataframe('jh_global_confirmed')
+        deaths_df = self.read_table_to_dataframe('jh_global_deaths')
+        recovered_df = self.read_table_to_dataframe('jh_global_recovered')
+        print(confirmed_df.shape)
+        print(deaths_df.shape)
+        print(recovered_df.shape)
+
+        merged_df = pd.merge(confirmed_df, deaths_df, 
+                        on=['province/state', 'country/region', 'date'],
+                        how='left')
+        # merged_df = pd.merge(merged_df, recovered_df, 
+        #                 on=['province/state', 'country/region', 'date'],
+        #                 how='left')
+        return merged_df
+        
 
 
 def main():
