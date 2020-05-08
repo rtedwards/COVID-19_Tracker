@@ -11,11 +11,24 @@ import streamlit as st
 # from coronavirus.preprocessor.preprocessor import load_data
 from coronavirus.mapper.mapper import choropleth_map
 from coronavirus.db_utils.db_utils import DataBase
+from coronavirus.utilities.utilities import get_totals, string_of_spaces
 from coronavirus.pages.world_map import load_world_map_page
 from coronavirus.pages.country_line_plots import load_country_line_plots_page
 
+# Display totals
+confirmed, deaths, recovered = get_totals()
 
-# pd.set_option('display.max_colwidth', -1)
+n_spaces = string_of_spaces(24)
+st.markdown(
+    f"\
+    ### 🤒 {confirmed:,} {n_spaces}\
+        💀 {deaths:,} {n_spaces}\
+        🤕 {recovered:,}\n\
+    "
+)
+# st.header(f"Confirmed: {confirmed}")   
+# st.header(f"Deaths: {deaths}")
+# st.header(f"Recovered: {recovered}")
 
 chart_type = st.sidebar.selectbox(label='Plot type', options=["Line Plots","World Map"])
 

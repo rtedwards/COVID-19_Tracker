@@ -47,7 +47,6 @@ def get_top_n_countries(df, n, response):
         :param n {int}: number of countries to select
         :param response {string}: deaths, confirmed, or recovered
     """
-    today = df.sort_values(by=['date'], ascending=False).iloc[0]
     top_df = df.loc[df['date'] == df['date'].max()]
     top_df = top_df.sort_values(by=[response], ascending=False)
 
