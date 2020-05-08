@@ -34,6 +34,10 @@ def merge_dataframes(df1, df2, df3=None):
     return merged_df
 
 
+def consolidate_country_regions(df):
+    """Selects the rows with overall country stats and drops region column"""
+    return df.loc[df['province/state'].isnull()].drop(columns=['province/state'])
+
 # Calculate Incidence, Prevalence, Morbidity, Mortality
 # https://www.health.ny.gov/diseases/chronic/basicstat.htm
 

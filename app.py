@@ -17,12 +17,12 @@ from coronavirus.pages.country_line_plots import load_country_line_plots_page
 
 # pd.set_option('display.max_colwidth', -1)
 
-chart_type = st.sidebar.selectbox(label='Plot type', options=["Lineplot","Map"])
+chart_type = st.sidebar.selectbox(label='Plot type', options=["Line Plots","World Map"])
 
-if chart_type == "Lineplot":
+if chart_type == "Line Plots":
     load_country_line_plots_page()
 
-if chart_type == "Map": 
+if chart_type == "World Map": 
     load_world_map_page()
 
 # Sources

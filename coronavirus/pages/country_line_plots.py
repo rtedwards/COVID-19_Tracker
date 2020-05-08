@@ -11,6 +11,7 @@ import streamlit as st
 # from coronavirus.preprocessor.preprocessor import load_data
 from coronavirus.mapper.mapper import choropleth_map
 from coronavirus.db_utils.db_utils import DataBase
+from coronavirus.preprocessor.preprocessor import consolidate_country_regions
 
 
 def load_country_line_plots_page():
@@ -29,6 +30,9 @@ def load_country_line_plots_page():
         df = db.read_table_to_dataframe('jh_global_recovered')
         response = 'recovered'
 
+    # Select Country row by dropping all rows where province/state != None
+    df = consolidate_country_regions(df)
+
     st.header("Countries over Time")
         # Choose Countries
     selected_countries = st.sidebar.multiselect(
@@ -41,7 +45,7 @@ def load_country_line_plots_page():
     countries_df = df[df['country/region'].isin(selected_countries)]
 
     month_ticks = np.unique(countries_df['date'].values.astype('datetime64[M]')).astype('datetime64',copy=False)
-    print(month_ticks)
+    # print(month_ticks)
     line_plot = alt.Chart(countries_df).mark_line().encode(
                     x='date:T',
                     y=response + ':Q',
