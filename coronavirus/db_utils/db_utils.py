@@ -113,6 +113,10 @@ class DataBase():
                                  response, 'date'])
         df = df.sort_values(by=['date'], ascending=False)
         df['date'] = pd.to_datetime(df['date']).dt.normalize()
+
+        # TODO: add response rate
+        # TODO: add population density
+        # TODO: add reponse / population density
         return df.drop_duplicates()
 
     def list_tables(self):
