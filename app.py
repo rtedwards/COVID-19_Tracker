@@ -15,13 +15,12 @@ st.markdown(f"\
         🤕 {recovered:,}\n\
             ")
 
-chart_type = st.sidebar.selectbox(label='Page',
-                                  options=["Country Totals",
-                                           "World Map"])
-
-if chart_type == "Country Totals":
+page = st.sidebar.radio(
+    "Choose page type to view:",
+    ('World Totals', 'World Map'))
+if page == 'World Totals':
     load_country_totals_page()
-if chart_type == "World Map":
+else:
     load_world_map_page()
 
 # Sources
