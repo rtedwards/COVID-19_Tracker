@@ -1,3 +1,5 @@
+# TODO: Potential solution: https://discuss.streamlit.io/t/showing-a-pyldavis-html/1296
+
 import folium
 
 URL = 'https://raw.githubusercontent.com/python-visualization/folium/master/examples/data'
