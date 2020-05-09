@@ -57,8 +57,8 @@ def load_country_totals_page():
 
     if log_scale:
         # Remove rows with 0 response because log(0) is undefined
-        log_df = countries_df.loc[countries_df[response] != 0]
-        log_rate_df = countries_df.loc[countries_df[response_rate] != 0]
+        log_df = countries_df.loc[countries_df[response] > 0]
+        log_rate_df = countries_df.loc[countries_df[response_rate] > 0]
 
         totals_plot = alt.Chart(log_df).mark_line().encode(
                         alt.Y(response + ':Q', scale=alt.Scale(type='log')),
@@ -87,4 +87,9 @@ def load_country_totals_page():
 
     st.altair_chart(totals_plot, use_container_width=True)
     st.altair_chart(rates_plot, use_container_width=True)
+    if log_scale:
+        st.markdown(
+            f"* Removed rows with `{response_rate}` \
+              less than or equal to 0 because:  \n\
+              $log(x)$ is undefined when $x \leq 0$")
     st.write(countries_df)
