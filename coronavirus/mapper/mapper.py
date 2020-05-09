@@ -16,25 +16,28 @@ STATE_GEO = f'{URL}/us-states.json'
 # https://geojson-maps.ash.ms/
 
 def choropleth_map(df,columns,geo_data,color,legend):
-    cmap = folium.Map(location=[48, -102], 
+    bmap = folium.Map(location=[48, -102], 
                       tiles='OpenStreetMap',
                       attr='www.openstreetmap.com',
                       zoom_start=4,
                       min_zoom=2,
-                      max_zoom=15)
+                      max_zoom=15
+                      )
 
-    folium.Choropleth(geo_data=geo_data,
-                      name='choropleth',
-                      data=df,
-                    #   columns=['ISO3 Code', 'confirmed'],
-                      columns=columns,
-                      key_on='feature.id',
-                      fill_color=color,
-                      fill_opacity=0.7,
-                      line_opacity=0.2,
-                      legend_name=legend,
-                      show=False
-    ).add_to(cmap)
+    cmap = folium.Choropleth(geo_data=geo_data,
+                              name='choropleth',
+                              data=df,
+                            #   columns=['ISO3 Code', 'confirmed'],
+                              columns=columns,
+                              key_on='feature.id',
+                              fill_color=color,
+                              fill_opacity=0.7,
+                              line_opacity=0.2,
+                              legend_name=legend,
+                              show=False)
+    # ).add_to(cmap)
+
+    bmap.add_child(cmap)
 
     # folium.TileLayer('Stamen Terrain').add_to(cmap)
     # folium.TileLayer('MapQuest Open Aerial', attr="MapQuest Open Aerial").add_to(cmap)
@@ -42,4 +45,12 @@ def choropleth_map(df,columns,geo_data,color,legend):
     # folium.TileLayer('stamentoner').add_to(cmap)
     # folium.LayerControl().add_to(cmap)
 
-    return cmap
+    return bmap
+
+def base_map():
+    """Simple base map"""
+    bmap = folium.Map([50.848633, 4.3497730],
+                       zoom_start=15,
+                       control_scale=True,
+                       tiles='cartodbpositron')
+    return bmap

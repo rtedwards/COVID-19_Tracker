@@ -9,7 +9,7 @@ import os
 import altair as alt
 import streamlit as st
 # from coronavirus.preprocessor.preprocessor import load_data
-from coronavirus.mapper.mapper import choropleth_map
+from coronavirus.mapper.mapper import choropleth_map, base_map
 from coronavirus.db_utils.db_utils import DataBase
 
 URL = 'https://raw.githubusercontent.com/python-visualization/folium/master/examples/data'
@@ -65,11 +65,14 @@ def load_world_map_page():
 
     # Create map
     with st.spinner('Rendering map...'):
-        active_map = choropleth_map(df,
-                                    columns=['ISO3 Code', response],
-                                    geo_data=COUNTRY_GEO,
-                                    color='YlGn',
-                                    legend='Cases')
+        # active_map = choropleth_map(df,
+        #                             columns=['ISO3 Code', response],
+        #                             geo_data=COUNTRY_GEO,
+        #                             color='YlGn',
+        #                             legend='Cases')
+        active_map = base_map()
         st.write(active_map._repr_html_(), unsafe_allow_html=True)
+        active_map.save("map.html")
         st.success("Map rendered.")
+    
     
