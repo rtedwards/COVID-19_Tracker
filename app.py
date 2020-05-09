@@ -13,7 +13,8 @@ from coronavirus.mapper.mapper import choropleth_map
 from coronavirus.db_utils.db_utils import DataBase
 from coronavirus.utilities.utilities import get_totals, string_of_spaces
 from coronavirus.pages.world_map import load_world_map_page
-from coronavirus.pages.country_line_plots import load_country_line_plots_page
+from coronavirus.pages.country_totals import load_country_totals_page                                            
+                                    
 
 # Display totals
 confirmed, deaths, recovered = get_totals()
@@ -25,11 +26,12 @@ st.markdown(f"\
         🤕 {recovered:,}\n\
             ")
 
-chart_type = st.sidebar.selectbox(label='Plot type', options=["Line Plots","World Map"])
+chart_type = st.sidebar.selectbox(label='Page', 
+                                  options=["Country Totals",
+                                           "World Map"])
 
-if chart_type == "Line Plots":
-    load_country_line_plots_page()
-
+if chart_type == "Country Totals":
+    load_country_totals_page()
 if chart_type == "World Map": 
     load_world_map_page()
 

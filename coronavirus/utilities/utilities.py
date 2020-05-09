@@ -56,9 +56,35 @@ def get_date_of_x_cases_reached(df, x):
     pass
 
 # TODO: create column of days since x number of cases reached
-def get_date_of_x_cases_reached(df):
+def add_column_date_of_x_cases_reached(df, x):
     """
     create column of days since x number of cases reached
     :param df: pandas df
+    :param x {int}: number of cases
     """
     pass
+
+# TODO: create column of cases each day
+def add_column_cases_per_day(df, response, name):
+    """
+    Create column of number of cases since previous day
+    :param df: pandas df sorted by date in ascending
+    :param reponse {str}: the response column to calculate rate
+    :param name {str}: new column name
+    """
+    # Sort by ascending so the inevitable NaN of first row is the first day 
+    # not the current day
+    rate_df = df.sort_values(by='date', ascending=True)
+
+    # TODO: make groupby 'country/region' 'state/province' agnostic
+    # TODO: probably wrap this in a class
+    def calculate_rate(x):
+        return x - x.shift(1)
+
+    # Select response, groupby country, calculate rate, transform back to df
+    rate_df[name] = rate_df.groupby(['country/region'])[response].transform(calculate_rate)
+    # rate_df[name] = rate_df['country/region'].map(rate_df.groupby(['country/region'])[response].calculate_rate())
+
+    rate_df = rate_df.reindex(columns=['country/region', response, 
+                                        name, 'date'])
+    return rate_df.sort_values(by='date', ascending=False)
