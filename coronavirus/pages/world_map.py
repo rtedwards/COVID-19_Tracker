@@ -24,16 +24,16 @@ def load_world_map_page():
     db = DataBase('COVID-19.db')
 
     data_type = st.sidebar.selectbox(label='Select data', options=['DEATHS', 'CONFIRMED', 'RECOVERED'], index=0)
-    if data_type == 'CONFIRMED': 
-        df = db.read_table_to_dataframe('jh_global_confirmed')
+    if data_type == 'CONFIRMED':
         response = 'confirmed'
+        df = db.read_table_to_dataframe('jh_global_confirmed', response)
         df['date'] = pd.to_datetime(df['date']).dt.normalize()
-    elif data_type == 'DEATHS': 
-        df = db.read_table_to_dataframe('jh_global_deaths')
+    elif data_type == 'DEATHS':
         response = 'deaths'
-    else: 
-        df = db.read_table_to_dataframe('jh_global_recovered')
+        df = db.read_table_to_dataframe('jh_global_deaths', response)
+    else:
         response = 'recovered'
+        df = db.read_table_to_dataframe('jh_global_recovered', response)
 
     st.header("World Map")
 
