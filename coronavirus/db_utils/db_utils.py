@@ -164,7 +164,7 @@ def main():
 
         print(f"{table}.length(): {length[0][0]}")
 
-    df = db.read_table_to_dataframe('jh_global_deaths')
+    df = db.read_table_to_dataframe('jh_global_deaths', 'deaths')
     print(df.tail(20))
 
 
