@@ -26,14 +26,14 @@ if chart_type == "World Map":
 
 # Sources
 # TODO: display_sources() utility function
-st.markdown(
+st.sidebar.markdown(
     "Sources:  \n\
-    [Johns Hopkins](https://github.com/CSSEGISandData/COVID-19) \n\
-    [Google](https://www.google.com/covid19/mobility/) \n\
+    [Johns Hopkins](https://github.com/CSSEGISandData/COVID-19)  \n\
+    [Google](https://www.google.com/covid19/mobility/)  \n\
     [World Bank]\
-        (api.worldbank.org/v2/en/indicator/EN.POP.DNST?downloadformat=csv) \n\
+        (api.worldbank.org/v2/en/indicator/EN.POP.DNST?downloadformat=csv)  \n\
     ")
-st.markdown(
+st.sidebar.markdown(
     "Github: [github.com/rtedwards]\
         (https://github.com/rtedwards/coronavirus-tracker)"
 )
