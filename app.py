@@ -1,20 +1,9 @@
-import pandas as pd
-import geopandas as gpd
-import joblib
-import folium
-import urllib
-import json
-import numpy as np
-import os
-import altair as alt
 import streamlit as st
-# from coronavirus.preprocessor.preprocessor import load_data
-from coronavirus.mapper.mapper import choropleth_map
 from coronavirus.db_utils.db_utils import DataBase
 from coronavirus.utilities.utilities import get_totals, string_of_spaces
 from coronavirus.pages.world_map import load_world_map_page
-from coronavirus.pages.country_totals import load_country_totals_page                                            
-                                    
+from coronavirus.pages.country_totals import load_country_totals_page
+
 
 # Display totals
 confirmed, deaths, recovered = get_totals()
@@ -26,23 +15,25 @@ st.markdown(f"\
         🤕 {recovered:,}\n\
             ")
 
-chart_type = st.sidebar.selectbox(label='Page', 
+chart_type = st.sidebar.selectbox(label='Page',
                                   options=["Country Totals",
                                            "World Map"])
 
 if chart_type == "Country Totals":
     load_country_totals_page()
-if chart_type == "World Map": 
+if chart_type == "World Map":
     load_world_map_page()
 
 # Sources
 # TODO: display_sources() utility function
 st.markdown(
     "Sources:  \n\
-    [Johns Hopkins](https://github.com/CSSEGISandData/COVID-19)  \n\
-    [Google](https://www.google.com/covid19/mobility/)  \n\
-    [World Bank](api.worldbank.org/v2/en/indicator/EN.POP.DNST?downloadformat=csv)  \n\
+    [Johns Hopkins](https://github.com/CSSEGISandData/COVID-19) \n\
+    [Google](https://www.google.com/covid19/mobility/) \n\
+    [World Bank]\
+        (api.worldbank.org/v2/en/indicator/EN.POP.DNST?downloadformat=csv) \n\
     ")
 st.markdown(
-    "Github: [github.com/rtedwards](https://github.com/rtedwards/coronavirus-tracker)"
+    "Github: [github.com/rtedwards]\
+        (https://github.com/rtedwards/coronavirus-tracker)"
 )

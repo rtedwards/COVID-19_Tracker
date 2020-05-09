@@ -1,23 +1,16 @@
-import pandas as pd
-import geopandas as gpd
-import joblib
-import folium
-import urllib
-import json
-import numpy as np
-import os
-import altair as alt
-import streamlit as st
 from coronavirus.db_utils.db_utils import DataBase
-from coronavirus.preprocessor.preprocessor import (consolidate_country_regions,
-                                                   get_top_n_countries)
+from coronavirus.preprocessor.preprocessor import consolidate_country_regions
+
 
 def get_totals():
     """Displays total deaths, confirmed, and recovered"""
     db = DataBase('COVID-19.db')
-    confirmed_df = db.read_table_to_dataframe('jh_global_confirmed', 'confirmed')
-    deaths_df = db.read_table_to_dataframe('jh_global_deaths', 'deaths')
-    recovered_df = db.read_table_to_dataframe('jh_global_recovered', 'recovered')
+    confirmed_df = db.read_table_to_dataframe('jh_global_confirmed',
+                                              'confirmed')
+    deaths_df = db.read_table_to_dataframe('jh_global_deaths',
+                                           'deaths')
+    recovered_df = db.read_table_to_dataframe('jh_global_recovered',
+                                              'recovered')
 
     confirmed_df = consolidate_country_regions(confirmed_df)
     deaths_df = consolidate_country_regions(deaths_df)
@@ -31,11 +24,13 @@ def get_totals():
     deaths_total = deaths_df['deaths'].sum()
     recovered_total = recovered_df['recovered'].sum()
 
-    return  confirmed_total, deaths_total, recovered_total
+    return confirmed_total, deaths_total, recovered_total
+
 
 def get_most_recent_numbers(df):
     """Returns most recent data"""
     return df.loc[df['date'] == df['date'].max()]
+
 
 def string_of_spaces(n):
     """
@@ -44,6 +39,7 @@ def string_of_spaces(n):
     :param n {int}: number of spaces
     """
     return "&nbsp;" * n
+
 
 # TODO: get date of x number of cases reached
 def get_date_of_x_cases_reached(df, x):
@@ -55,6 +51,7 @@ def get_date_of_x_cases_reached(df, x):
     """
     pass
 
+
 # TODO: create column of days since x number of cases reached
 def add_column_date_of_x_cases_reached(df, x):
     """
@@ -64,6 +61,7 @@ def add_column_date_of_x_cases_reached(df, x):
     """
     pass
 
+
 # TODO: create column of cases each day
 def add_column_cases_per_day(df, response, name):
     """
@@ -72,7 +70,7 @@ def add_column_cases_per_day(df, response, name):
     :param reponse {str}: the response column to calculate rate
     :param name {str}: new column name
     """
-    # Sort by ascending so the inevitable NaN of first row is the first day 
+    # Sort by ascending so the inevitable NaN of first row is the first day
     # not the current day
     rate_df = df.sort_values(by='date', ascending=True)
 
@@ -82,9 +80,9 @@ def add_column_cases_per_day(df, response, name):
         return x - x.shift(1)
 
     # Select response, groupby country, calculate rate, transform back to df
-    rate_df[name] = rate_df.groupby(['country/region'])[response].transform(calculate_rate)
-    # rate_df[name] = rate_df['country/region'].map(rate_df.groupby(['country/region'])[response].calculate_rate())
+    rate_df[name] = (rate_df.groupby(['country/region'])[response]
+                     .transform(calculate_rate))
 
-    rate_df = rate_df.reindex(columns=['country/region', response, 
-                                        name, 'date'])
+    rate_df = rate_df.reindex(columns=['country/region', response,
+                                       name, 'date'])
     return rate_df.sort_values(by='date', ascending=False)

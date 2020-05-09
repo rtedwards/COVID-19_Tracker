@@ -1,43 +1,42 @@
 import pandas as pd
-import geopandas as gpd
-import joblib
-import json
-import folium
-import urllib
-import os
 
 
-def convert_jh_global_time_series_to_long(df, name): 
+def convert_jh_global_time_series_to_long(df, name):
     """Converts JH global time series data from wide to long format"""
     df = df.melt(id_vars=['Province/State', 'Country/Region', 'Lat', 'Long'],
-                 var_name='date', 
+                 var_name='date',
                  value_name=name)
 
     # Convert to datetime
     df['date'] = pd.to_datetime(df['date'], format="%m/%d/%y").dt.normalize()
 
     # Rename columns
-    df.columns = ['province/state', 'country/region', 'latitude', 'longitude', 'date', name]
+    df.columns = ['province/state', 'country/region',
+                  'latitude', 'longitude', 'date', name]
     return df
 
 
 def merge_dataframes(df1, df2, df3=None):
     """Merges JH global time series dataframes"""
-    merged_df = pd.merge(df1, df1, 
-                    on=['Province/State', 'Country/Region', 'Lat', 'Long', 'date'],
-                    how='inner')
-    
+    merged_df = pd.merge(df1, df1,
+                         on=['Province/State', 'Country/Region',
+                             'Lat', 'Long', 'date'],
+                         how='inner')
+
     if df3:
-        merged_df = pd.merge(merged_df, df3, 
-                    on=['Province/State', 'Country/Region', 'Lat', 'Long', 'date'],
-                    how='inner')
+        merged_df = pd.merge(merged_df, df3,
+                             on=['Province/State', 'Country/Region',
+                                 'Lat', 'Long', 'date'],
+                             how='inner')
 
     return merged_df
 
 
 def consolidate_country_regions(df):
     """Selects the rows with overall country stats and drops region column"""
-    return df.loc[df['province/state'].isnull()].drop(columns=['province/state'])
+    rtn_df = (df.loc[df['province/state'].isnull()]
+              .drop(columns=['province/state']))
+    return rtn_df
 
 
 def get_top_n_countries(df, n, response):
@@ -51,8 +50,6 @@ def get_top_n_countries(df, n, response):
     top_df = top_df.sort_values(by=[response], ascending=False)
 
     return list(top_df['country/region'].iloc[0:n])
-
-    
 
 # Calculate Incidence, Prevalence, Morbidity, Mortality
 # https://www.health.ny.gov/diseases/chronic/basicstat.htm
