@@ -1,3 +1,4 @@
+import streamlit as st
 from coronavirus.db_utils.db_utils import DataBase
 from coronavirus.preprocessor.preprocessor import consolidate_country_regions
 
@@ -86,3 +87,16 @@ def add_column_cases_per_day(df, response, name):
     rate_df = rate_df.reindex(columns=['country/region', response,
                                        name, 'date'])
     return rate_df.sort_values(by='date', ascending=False)
+
+
+def _max_width_():
+    """Workaround in html to not having a 'Wide Mode()' setting"""
+    max_width_str = f"max-width: 2000px;"
+    st.markdown(f"""
+                <style>
+                .reportview-container .main .block-container{{ 
+                    {max_width_str} }}
+                </style>    
+                """,
+        unsafe_allow_html=True,
+    )

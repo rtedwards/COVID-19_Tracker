@@ -11,6 +11,7 @@ import streamlit as st
 # from coronavirus.preprocessor.preprocessor import load_data
 from coronavirus.mapper.mapper import choropleth_map, base_map
 from coronavirus.db_utils.db_utils import DataBase
+from coronavirus.utilities.utilities import _max_width_
 
 URL = 'https://raw.githubusercontent.com/python-visualization/folium/master/examples/data'
 # URL = f'https://github.com/datasets/geo-countries/tree/master/data/countries.geojson'
@@ -19,7 +20,8 @@ STATE_GEO = f'{URL}/us-states.json'
 
 
 def load_world_map_page():
-
+    _max_width_()
+    
     # Get the data
     db = DataBase('COVID-19.db')
 
@@ -65,14 +67,18 @@ def load_world_map_page():
 
     # Create map
     with st.spinner('Rendering map...'):
-        # active_map = choropleth_map(df,
-        #                             columns=['ISO3 Code', response],
-        #                             geo_data=COUNTRY_GEO,
-        #                             color='YlGn',
-        #                             legend='Cases')
-        active_map = base_map()
+        active_map = choropleth_map(df,
+                                    columns=['ISO3 Code', response],
+                                    geo_data=COUNTRY_GEO,
+                                    color='YlGn',
+                                    legend='Cases')
+        # active_map = base_map()
         st.write(active_map._repr_html_(), unsafe_allow_html=True)
         active_map.save("map.html")
         st.success("Map rendered.")
-    
+
+        m = folium.Map(location=[48, -102], 
+               tiles="OpenStreetMap",
+               zoom_start=4,
+               min_zoom=2)    
     
