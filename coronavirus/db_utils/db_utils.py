@@ -3,7 +3,8 @@ import pandas as pd
 from sqlite3 import Error
 from pathlib import Path
 from coronavirus.preprocessor.preprocessor import (
-    convert_jh_global_time_series_to_long)
+    convert_jh_global_time_series_to_long,
+    clean_country_names)
 
 
 # create a default path to connect to and create (if necessary) a database
@@ -54,6 +55,7 @@ class DataBase():
         """
         df = pd.read_csv(url)
         df = convert_jh_global_time_series_to_long(df, name.split('_')[2])
+        df = clean_country_names(df)
 
         self.save_to_db(df, name)
 

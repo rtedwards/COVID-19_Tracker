@@ -51,6 +51,18 @@ def get_top_n_countries(df, n, response):
 
     return list(top_df['country/region'].iloc[0:n])
 
+def clean_country_names(df):
+    """
+    Given a dataframe with only 1 column 'country/region'
+    cleans country names
+    """
+    cleaned_df = df.replace({'country/region':
+                                {'US': 'United States',
+                                'Taiwan*': 'Taiwan',
+                                'Korea, South': 'South Korea'}
+                            })
+    return cleaned_df
+
 # Calculate Incidence, Prevalence, Morbidity, Mortality
 # https://www.health.ny.gov/diseases/chronic/basicstat.htm
 
