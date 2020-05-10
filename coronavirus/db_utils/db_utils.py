@@ -131,9 +131,9 @@ class DataBase():
     def load_jh_world_df(self):
         """Loads and joins confirmed, deaths, and recovered tables from DB"""
 
-        confirmed_df = self.read_table_to_dataframe('jh_global_confirmed')
-        deaths_df = self.read_table_to_dataframe('jh_global_deaths')
-        recovered_df = self.read_table_to_dataframe('jh_global_recovered')
+        confirmed_df = self.read_table_to_dataframe('jh_global_confirmed', 'confirmed')
+        deaths_df = self.read_table_to_dataframe('jh_global_deaths', 'deaths')
+        recovered_df = self.read_table_to_dataframe('jh_global_recovered', 'recovered')
         print(confirmed_df.shape)
         print(deaths_df.shape)
         print(recovered_df.shape)
