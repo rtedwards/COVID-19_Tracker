@@ -60,13 +60,13 @@ def load_country_totals_page():
         log_df = countries_df.loc[countries_df[response] > 0]
         log_rate_df = countries_df.loc[countries_df[response_rate] > 0]
 
-        totals_plot = alt.Chart(log_df).mark_line().encode(
+        totals_plot = alt.Chart(log_df).mark_line(interpolate='basis').encode(
                         alt.Y(response + ':Q', scale=alt.Scale(type='log')),
                         x='date' + ':T',
                         # y=response + ':Q',
                         color='country/region' + ':N'
                     )
-        rates_plot = alt.Chart(log_rate_df).mark_line().encode(
+        rates_plot = alt.Chart(log_rate_df).mark_line(interpolate='basis').encode(
                         alt.Y(response_rate + ':Q',
                               scale=alt.Scale(type='log')),
                         x='date' + ':T',
@@ -74,12 +74,12 @@ def load_country_totals_page():
                         color='country/region' + ':N'
                     )
     else:
-        totals_plot = alt.Chart(countries_df).mark_line().encode(
+        totals_plot = alt.Chart(countries_df).mark_line(interpolate='basis').encode(
                         x='date' + ':T',
                         y=response + ':Q',
                         color='country/region' + ':N'
                     )
-        rates_plot = alt.Chart(countries_df).mark_line().encode(
+        rates_plot = alt.Chart(countries_df).mark_line(interpolate='basis').encode(
                         x='date' + ':T',
                         y=response_rate + ':Q',
                         color='country/region' + ':N'
