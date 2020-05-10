@@ -30,7 +30,7 @@ st.sidebar.markdown(
     [Johns Hopkins](https://github.com/CSSEGISandData/COVID-19)  \n\
     [Google](https://www.google.com/covid19/mobility/)  \n\
     [World Bank]\
-        (api.worldbank.org/v2/en/indicator/EN.POP.DNST?downloadformat=csv)  \n\
+        (https://data.worldbank.org/indicator/EN.POP.DNST)  \n\
     ")
 st.sidebar.markdown(
     "Github: [github.com/rtedwards]\
