@@ -1,3 +1,4 @@
+import os
 import sqlite3
 import pandas as pd
 from sqlite3 import Error
@@ -152,7 +153,10 @@ def main():
     DEATHS = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv'
     RECOVERED = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv'
 
-    # db = DataBase('database.sqlite3')
+    # Delete database and create new one
+    if os.path.exists('COVID-19.db'):
+        os.remove('COVID-19.db')
+
     db = DataBase('COVID-19.db')
     db.pull_data(url=CONFIRMED, name='jh_global_confirmed', csv=True)
     db.pull_data(url=DEATHS, name='jh_global_deaths', csv=True)
@@ -167,7 +171,6 @@ def main():
         print(f"{table}.length(): {length[0][0]}")
 
     df = db.read_table_to_dataframe('jh_global_deaths', 'deaths')
-    print(df.tail(20))
 
 
 if __name__ == '__main__':
