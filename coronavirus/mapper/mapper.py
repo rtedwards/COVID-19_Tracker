@@ -13,15 +13,17 @@ STATE_GEO = f'{URL}/us-states.json'
 
 def choropleth_map(df, columns, geo_data, color, legend):
     bmap = folium.Map(location=[48, -102],
-                      tiles='stamentoner',
-                      attr='www.stamentoner.com',
+                      tiles='cartodbpositron',
+                    #   attr='www.stamentoner.com',
                       zoom_start=4,
                       min_zoom=2,
                       max_zoom=15
                       )
 
+    # TODO: convert to geojson
+    # TODO: Add popup info for each country
     cmap = folium.Choropleth(geo_data=geo_data,
-                             name='choropleth',
+                            #  name='choropleth',
                              data=df,
                              # columns=['ISO3 Code', 'confirmed'],
                              columns=columns,

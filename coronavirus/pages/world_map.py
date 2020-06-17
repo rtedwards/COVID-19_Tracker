@@ -20,8 +20,9 @@ STATE_GEO = f'{URL}/us-states.json'
 
 
 def load_world_map_page():
+    # set to wide-mode
     _max_width_()
-    
+
     # Get the data
     db = DataBase('COVID-19.db')
 
@@ -76,9 +77,5 @@ def load_world_map_page():
         st.write(active_map._repr_html_(), unsafe_allow_html=True)
         active_map.save("map.html")
         st.success("Map rendered.")
-
-        m = folium.Map(location=[48, -102], 
-               tiles="OpenStreetMap",
-               zoom_start=4,
-               min_zoom=2)    
+  
     

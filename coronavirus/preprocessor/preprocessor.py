@@ -63,6 +63,7 @@ def clean_country_names(df):
                             })
     return cleaned_df
 
+
 # Calculate Incidence, Prevalence, Morbidity, Mortality
 # https://www.health.ny.gov/diseases/chronic/basicstat.htm
 
