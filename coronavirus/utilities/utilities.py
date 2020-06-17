@@ -1,4 +1,9 @@
 import streamlit as st
+import urllib
+import json
+import pandas as pd
+import numpy as np
+from pathlib import Path
 from coronavirus.db_utils.db_utils import DataBase
 from coronavirus.preprocessor.preprocessor import consolidate_country_regions
 
@@ -98,5 +103,110 @@ def _max_width_():
                     {max_width_str} }}
                 </style>    
                 """,
-        unsafe_allow_html=True,
-    )
+                unsafe_allow_html=True,
+                )
+
+
+def add_ISO2_country_codes(df):
+    """Adds ISO2 country codes to dataframe"""
+    link = "http://country.io/names.json"
+    f = urllib.request.urlopen(link)
+
+    country_json = f.read().decode("utf-8")
+    country_ISO2 = json.loads(country_json)
+    country_ISO2_df = pd.DataFrame(country_ISO2.items(), columns=['ISO2 Code', 'country/region'])
+
+    return pd.merge(df, country_ISO2_df, on='country/region', how='inner')
+    # df.head()
+
+
+def add_ISO3_country_codes(df):
+    """Adds ISO3 country codes to dataframe"""
+    link = "http://country.io/iso3.json"
+    f = urllib.request.urlopen(link)
+
+    country_json = f.read().decode("utf-8")
+    country_ISO3 = json.loads(country_json)
+    country_ISO3_df = pd.DataFrame(country_ISO3.items(), columns=['ISO2 Code', 'ISO3 Code'])
+
+    return pd.merge(df, country_ISO3_df, on='ISO2 Code', how='inner')
+    # df.head()
+
+
+def add_population_density(df):
+    """Joins population density from 2018"""
+    db = DataBase('COVID-19.db')
+    population_df = db.load_population_density_df()
+
+    merged_df = df.merge(population_df[['Country Code', '2018']],
+                         how='left',
+                         left_on=['ISO3 Code'],
+                         right_on=['Country Code'])
+    merged_df['pop_density_per_sq_km'] = merged_df['2018']
+    merged_df = merged_df.drop(columns=['Country Code', '2018'])
+
+    return merged_df
+
+
+def add_country_population(df):
+    """Joins population density from 2018"""
+    db = DataBase('COVID-19.db')
+    population_df = db.load_population_df()
+
+    merged_df = df.merge(population_df[['Country Code', '2018']],
+                         how='left',
+                         left_on=['ISO3 Code'],
+                         right_on=['Country Code'])
+    merged_df['population'] = merged_df['2018']
+    merged_df = merged_df.drop(columns=['Country Code', '2018'])
+
+    return merged_df
+
+
+def add_google_mobility_data(df):
+    """Join Google mobility data"""
+    # db = DataBase('COVID-19.db')
+    # google_df = db.pull_google_mobility_data()
+    # link = "https://www.gstatic.com/covid19/mobility/Global_Mobility_Report.csv"
+    link = Path.cwd() / 'data/Global_Mobility_Report.csv'
+    google_df = pd.read_csv(link)
+    google_df['date'] = pd.to_datetime(google_df['date'])
+    merged_df = df.merge(google_df,
+                         how='left',
+                         left_on=['ISO2 Code', 'date'],
+                         right_on=['country_region_code', 'date'])
+    return merged_df
+
+# TODO: Rolling average
+
+
+def rolling_mean(df, num_days):
+    """
+    Window average on response.  Smooths variations due to problems with 
+    reporting. 
+
+    df: a pandas series for the response
+    return: 
+    """
+    n = num_days - 1
+    response = df.to_numpy()
+    avg_response = response.copy()
+    for i in range(1, len(response)):
+        if i <= num_days:
+            print(f'i = {i}')
+            print(f'n = {n}')
+            print(f'num_days = {num_days}')
+            print(f'num_days-n = {num_days - n}')
+            avg_response[i] = round(response[0:num_days-n].mean())
+            print(f'avg = {avg_response[i]}')
+            print()
+            n -= 1
+        else:
+            print(f'i = {i}')
+            print(f'i-num_days = {i-num_days}')
+            print(f'response[i-n:i] = response[i-num_days:i]')
+            avg_response[i] = round(response[i-num_days:i].mean())
+            print(f'avg = {avg_response[i]}')
+            print()
+
+    return pd.Series(avg_response)
