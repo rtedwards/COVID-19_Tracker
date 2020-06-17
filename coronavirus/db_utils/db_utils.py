@@ -32,17 +32,27 @@ class DataBase():
             print(f"The error '{e}' occurred")
         return connection
 
-    def pull_mobility_data(self):
+    def pull_google_mobility_data(self):
         """
-        Pulls mobility data from Google and Apple.  Needs to be updated daily
+        Pulls mobility data from Google.  Needs to be updated daily
         Google:
             - CSV: https://www.gstatic.com/covid19/mobility/Global_Mobility_Report.csv
+        """
+        # link = "https://www.gstatic.com/covid19/mobility/Global_Mobility_Report.csv"
+        link = Path.cwd() / 'data/Global_Mobility_Report.csv'
+        google_df = pd.read_csv(link)
+        google_df['date'] = pd.to_datetime(google_df['date'])
+        return google_df
+
+
+    def pull_apple_mobility_data(self):
+        """
+        Pulls mobility data from Apple.  Needs to be updated daily
         Apple: https://www.apple.com/covid19/mobility
             - CSV: https://covid19-static.cdn-apple.com/covid19-mobility-data/2006HotfixDev7/v1/en-us/applemobilitytrends-2020-04-16.csv
         """
-        # pull_google_mobility_data()
-        # pull_apple_mobility_data()
-        pass
+        link = "https://covid19-static.cdn-apple.com/covid19-mobility-data/2006HotfixDev7/v1/en-us/applemobilitytrends-2020-04-16.csv"
+        return pd.read_csv(link)
 
     def pull_world_bank_data(self):
         """Pulls population data from World Bank
@@ -146,6 +156,13 @@ class DataBase():
         #                 how='left')
         return merged_df
 
+    def load_population_density_df(self):
+        file_path = Path.cwd() / 'data/population_density_data.csv'
+        return pd.read_csv(file_path)
+
+    def load_population_df(self):
+        file_path = Path.cwd() / 'data/population_data.csv'
+        return pd.read_csv(file_path, skiprows=1)
 
 def main():
     # Should set these url paths as environment variables
